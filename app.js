@@ -27,16 +27,41 @@ const Article = mongoose.model("Article", articleSchema);
 
 // TODO
 
-app.get("/articles", function(req, res) {
-    Article.find({})
-        .then((foundArticles) => {
-            res.send(foundArticles);
-        })
-        .catch((err) => {
-            res.send(err);
-        })
-});
+app.route("/articles")
+    .get(function(req, res) {
+        Article.find({})
+            .then((foundArticles) => {
+                res.send(foundArticles);
+            })
+            .catch((err) => {
+                res.send(err);
+            })
+    })
+    .post(function(req, res) {
 
+        const newArticle = new Article ({
+            title: req.body.title,
+            content: req.body.content 
+        });
+
+        newArticle.save()
+            .then(() => {
+                res.send("Successfully added a new article.")
+            })
+            .catch((err) => {
+                res.send(err);
+            });
+    })
+
+    .delete(function(req, res) {
+        Article.deleteMany({})
+            .then(() => {
+                res.send("Successfully deleted all articles.");
+            })
+            .catch((err) => {
+                res.send(err);
+            })
+    });
 
 
 app.listen(3000, function() {
