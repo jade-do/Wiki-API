@@ -107,7 +107,17 @@ app.route("/articles/:articleTitle")
         })
     })
     .delete(function(req, res) {
-        
+        Article.deleteOne({title: req.params.articleTitle})
+            .then((deletedArticle) => {
+                if(deletedArticle) {
+                    res.send(deletedArticle)
+                } else {
+                    res.send("Failed to delete. No articles matching that title was found.")
+                }
+            })
+            .catch((err) => {
+                res.send(err);
+            })
     });
 
 app.listen(3000, function() {
